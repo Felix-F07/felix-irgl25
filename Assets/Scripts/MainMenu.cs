@@ -5,20 +5,21 @@ public class MainMenu : MonoBehaviour
 {
     public void PlayGame()
     {
-        SceneManager.LoadScene("Scene2");
+        SceneManager.LoadScene("Scene2"); // Scene permainan utama Anda
+    }
+
+    // TAMBAHKAN FUNGSI BARU INI
+    public void ShowHowToPlay()
+    {
+        SceneManager.LoadScene("HowToPlay");
     }
 
     public void QuitGame()
     {
-        Debug.Log("Tombol Quit ditekan!");
-
-        
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-
-        
-#else
+        #else
         Application.Quit();
-#endif
+        #endif
     }
 }
