@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
+using System.Collections.Generic; 
 
 public class GameManager : MonoBehaviour
 {
@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     private float timeRemaining;
     private bool timerIsRunning = false;
 
+    [Header("Chest Settings")]
     public HashSet<string> answeredChests = new HashSet<string>();
 
     private void Awake()
@@ -33,7 +34,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        StartTimer(8 * 60); // 8 menit
+        StartTimer(8 * 60);
     }
 
     private void OnEnable()
@@ -45,19 +46,6 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
-    public void MarkChestAsAnswered(string chestID)
-    {
-        if (!answeredChests.Contains(chestID))
-        {
-            answeredChests.Add(chestID);
-        }
-    }
-
-    public bool IsChestAnswered(string chestID)
-    {
-        return answeredChests.Contains(chestID);
-    }
-
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -67,6 +55,15 @@ public class GameManager : MonoBehaviour
         {
             DisplayTime(timeRemaining);
         }
+
+       
+        if (scene.name == "Exit")
+        {
+            
+            Debug.Log("Game Selesai. Mengirim skor akhir: " + score);
+            WebBridge.SendScore(score);
+        }
+        
     }
 
     public void StartTimer(float durationInSeconds)
@@ -86,15 +83,11 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                // === PERUBAHAN PENTING ADA DI SINI ===
                 Debug.Log("Waktu Habis! Pindah ke scene Exit.");
                 timeRemaining = 0;
                 timerIsRunning = false;
                 DisplayTime(timeRemaining);
-
-                // Langsung pindah ke scene "Exit" tanpa menambah poin
                 SceneManager.LoadScene("Exit");
-                // =====================================
             }
         }
     }
@@ -129,5 +122,19 @@ public class GameManager : MonoBehaviour
     void UpdateScoreText()
     {
         if (scoreText != null) { scoreText.text = "SCORE : " + score; }
+    }
+
+    
+    public void MarkChestAsAnswered(string chestID)
+    {
+        if (!answeredChests.Contains(chestID))
+        {
+            answeredChests.Add(chestID);
+        }
+    }
+
+    public bool IsChestAnswered(string chestID)
+    {
+        return answeredChests.Contains(chestID);
     }
 }
